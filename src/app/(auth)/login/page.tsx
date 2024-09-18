@@ -13,7 +13,7 @@ export const description =
 export default function Login() {
    return (
       <div className="w-full lg:grid  lg:grid-cols-2 h-screen">
-         <div className="bg-[#F3FFF2] flex items-center justify-center">
+         <div className="bg-[#F3FFF2] hidden  lg:flex lg:items-center lg:justify-center">
             <Image
                src={logo}
                alt="Image"
