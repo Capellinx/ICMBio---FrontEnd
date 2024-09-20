@@ -18,6 +18,14 @@ import { EyeOff, Eye } from 'lucide-react';
 import { useState } from "react";
 import { cpfMask } from "@/functions/cpf-mask";
 import { phoneMask } from "@/functions/phone-mask";
+import {
+   Select,
+   SelectContent,
+   SelectItem,
+   SelectTrigger,
+   SelectValue,
+} from "@/components/ui/select"
+
 
 export function RegisterForm() {
    const [isShowPassword, setIsShowPassword] = useState(false)
@@ -41,128 +49,154 @@ export function RegisterForm() {
 
    return (
       <Form {...form}>
-         <form className="grid gap-4 grid-cols-2 w-full" onSubmit={form.handleSubmit(submit)}>
+         <form onSubmit={form.handleSubmit(submit)}>
+            <section className="grid gap-4 grid-cols-1 md:grid-cols-2 w-full mb-4">
+
+               <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                     <FormItem>
+                        <FormLabel>Nome Completo</FormLabel>
+                        <FormControl>
+                           <Input placeholder="Digite seu nome" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                     </FormItem>
+                  )}
+               />
+
+               <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                     <FormItem>
+                        <FormLabel>Email</FormLabel>
+                        <FormControl>
+                           <Input placeholder="example@mail.com" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                     </FormItem>
+                  )}
+               />
+
+               <FormField
+                  control={form.control}
+                  name="cpf"
+                  render={({ field: { onChange, ...props } }) => (
+                     <FormItem>
+                        <FormLabel>CPF</FormLabel>
+                        <FormControl>
+                           <Input
+                              onChange={(e) => {
+                                 const { value } = e.target
+                                 e.target.value = cpfMask(value)
+
+                                 onChange(e)
+                              }}
+                              placeholder="000.000.000-00"
+                              {...props}
+                           />
+                        </FormControl>
+                        <FormMessage />
+                     </FormItem>
+                  )}
+               />
+
+               <FormField
+                  control={form.control}
+                  name="phone"
+                  render={({ field: { onChange, ...porps } }) => (
+                     <FormItem>
+                        <FormLabel>Telefone</FormLabel>
+                        <FormControl>
+                           <Input
+                              onChange={(e) => {
+                                 const { value } = e.target
+                                 e.target.value = phoneMask(value)
+                                 onChange(e)
+                              }}
+                              placeholder="(00) 00000-0000"
+                              {...porps}
+                           />
+                        </FormControl>
+                        <FormMessage />
+                     </FormItem>
+                  )}
+               />
+
+               <FormField
+                  control={form.control}
+                  name="password"
+                  render={({ field }) => (
+                     <FormItem>
+                        <FormLabel>Senha</FormLabel>
+                        <FormControl>
+                           <div className="relative">
+                              <Input type={isShowPassword ? 'text' : 'password'} {...field} className="pr-10" />
+                              {isShowPassword
+                                 ? <Eye
+                                    className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer size-4 "
+                                    onClick={() => setIsShowPassword(!isShowPassword)}
+                                 />
+                                 : <EyeOff
+
+                                    className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer size-4 "
+                                    onClick={() => setIsShowPassword(!isShowPassword)}
+                                 />
+                              }
+                           </div>
+                        </FormControl>
+                        <FormMessage />
+                     </FormItem>
+                  )}
+               />
+
+               <FormField
+                  control={form.control}
+                  name="confirmPassword"
+                  render={({ field }) => (
+                     <FormItem>
+                        <FormLabel>Confirmar Senha</FormLabel>
+                        <FormControl>
+                           <div className="relative">
+                              <Input type={isShowPassword ? 'text' : 'password'} {...field} className="pr-10" />
+                              {isShowPassword
+                                 ? <Eye
+                                    className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer size-4 "
+                                    onClick={() => setIsShowPassword(!isShowPassword)}
+                                 />
+                                 : <EyeOff
+
+                                    className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer size-4 "
+                                    onClick={() => setIsShowPassword(!isShowPassword)}
+                                 />
+                              }
+                           </div>
+                        </FormControl>
+                        <FormMessage />
+                     </FormItem>
+                  )}
+               />
+            </section>
+
             <FormField
                control={form.control}
-               name="name"
+               name="type_person"
                render={({ field }) => (
                   <FormItem>
-                     <FormLabel>Nome Completo</FormLabel>
+                     <FormLabel>Tipo de usuário</FormLabel>
                      <FormControl>
-                        <Input placeholder="Digite seu nome" {...field} />
-                     </FormControl>
-                     <FormMessage />
-                  </FormItem>
-               )}
-            />
-
-            <FormField
-               control={form.control}
-               name="email"
-               render={({ field }) => (
-                  <FormItem>
-                     <FormLabel>Email</FormLabel>
-                     <FormControl>
-                        <Input placeholder="example@mail.com" {...field} />
-                     </FormControl>
-                     <FormMessage />
-                  </FormItem>
-               )}
-            />
-
-            <FormField
-               control={form.control}
-               name="cpf"
-               render={({ field: { onChange, ...props } }) => (
-                  <FormItem>
-                     <FormLabel>CPF</FormLabel>
-                     <FormControl>
-                        <Input
-                           onChange={(e) => {
-                              const { value } = e.target
-                              e.target.value = cpfMask(value)
-
-                              onChange(e)
-                           }}
-                           placeholder="000.000.000-00"
-                           {...props}
-                        />
-                     </FormControl>
-                     <FormMessage />
-                  </FormItem>
-               )}
-            />
-
-            <FormField
-               control={form.control}
-               name="phone"
-               render={({ field: { onChange, ...porps } }) => (
-                  <FormItem>
-                     <FormLabel>Telefone</FormLabel>
-                     <FormControl>
-                        <Input
-                           onChange={(e) => {
-                              const { value } = e.target
-                              e.target.value = phoneMask(value)
-                              onChange(e)
-                           }}
-                           placeholder="(00) 00000-0000"
-                           {...porps}
-                        />
-                     </FormControl>
-                     <FormMessage />
-                  </FormItem>
-               )}
-            />
-
-            <FormField
-               control={form.control}
-               name="password"
-               render={({ field }) => (
-                  <FormItem>
-                     <FormLabel>Senha</FormLabel>
-                     <FormControl>
-                        <div className="relative">
-                           <Input type={isShowPassword ? 'text' : 'password'} {...field} className="pr-10" />
-                           {isShowPassword
-                              ? <Eye
-                                 className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer size-4 "
-                                 onClick={() => setIsShowPassword(!isShowPassword)}
-                              />
-                              : <EyeOff
-
-                                 className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer size-4 "
-                                 onClick={() => setIsShowPassword(!isShowPassword)}
-                              />
-                           }
-                        </div>
-                     </FormControl>
-                     <FormMessage />
-                  </FormItem>
-               )}
-            />
-
-            <FormField
-               control={form.control}
-               name="confirmPassword"
-               render={({ field }) => (
-                  <FormItem>
-                     <FormLabel>Confirmar Senha</FormLabel>
-                     <FormControl>
-                        <div className="relative">
-                           <Input type={isShowPassword ? 'text' : 'password'} {...field} className="pr-10" />
-                           {isShowPassword
-                              ? <Eye
-                                 className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer size-4 "
-                                 onClick={() => setIsShowPassword(!isShowPassword)}
-                              />
-                              : <EyeOff
-
-                                 className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer size-4 "
-                                 onClick={() => setIsShowPassword(!isShowPassword)}
-                              />
-                           }
-                        </div>
+                        <Select onValueChange={field.onChange} value={field.value}>
+                           <SelectTrigger className="">
+                              <SelectValue placeholder="Selecione o tipo" />
+                           </SelectTrigger>
+                           <SelectContent>
+                              <SelectItem value="Pesquisador(a)">Pesquisador(a)</SelectItem>
+                              <SelectItem value="Condutor(a)">Condutor(a)</SelectItem>
+                              <SelectItem value="Voluntario(a)">Voluntario(a)</SelectItem>
+                           </SelectContent>
+                        </Select>
                      </FormControl>
                      <FormMessage />
                   </FormItem>
