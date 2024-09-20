@@ -1,14 +1,11 @@
 import Image from "next/image"
 import Link from "next/link"
 
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-
 import logo from "@/public/svg/logo.svg"
-
+import { LoginForm } from './../../../components/forms/login-form/index';
 
 export default function Login() {
+
    return (
       <div className="w-full lg:grid  lg:grid-cols-2 h-screen">
          <div className="bg-[#F3FFF2] hidden  lg:flex lg:items-center lg:justify-center">
@@ -27,35 +24,7 @@ export default function Login() {
                   </p>
                   <h1 className="text-3xl font-bold text-left ">Faça login na sua conta</h1>
                </div>
-               <div className="grid gap-4">
-                  <div className="grid gap-2">
-                     <Label htmlFor="email">Email</Label>
-                     <Input
-                        id="email"
-                        type="email"
-                        placeholder="m@example.com"
-                        required
-                     />
-                  </div>
-                  <div className="grid gap-2">
-                     <Label htmlFor="password">Password</Label>
-                     <Input id="password" type="password" required />
-                     <div className="flex items-center">
-                        <Link
-                           href="/forgot-password"
-                           className="ml-auto inline-block text-sm underline"
-                        >
-                           Esqueceu sua senha?
-                        </Link>
-                     </div>
-                  </div>
-                  <Button type="submit" className="w-full bg-[#1E9E6A] p-4 hover:bg-[#207553]">
-                     Entrar
-                  </Button>
-                  <Button variant="outline" className="w-full">
-                     Login institucional
-                  </Button>
-               </div>
+               <LoginForm />
                <div className="mt-4 text-center text-sm">
                   Ainda não possui uma conta?{" "}
                   <Link href="/register" className="underline">
