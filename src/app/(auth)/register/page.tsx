@@ -8,7 +8,7 @@ import { RegisterForm } from "@/components/forms/register-form"
 
 export default function Register() {
    return (
-      <main className="w-full lg:grid  lg:grid-cols-2 h-screen">
+      <main className="w-full lg:grid  lg:grid-cols-2 h-screen p-4">
          <section className="bg-[#F3FFF2] hidden  lg:flex lg:items-center lg:justify-center">
             <Image
                src={logo}
