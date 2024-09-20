@@ -14,7 +14,11 @@ export const registerSchema = z.object({
    cpf: z.coerce
       .string({ required_error: "CPF obrigatório" })
       .min(1, { message: "CPF obrigatório" })
-      .max(14, { message: "CPF inválido" }),
+      .max(14, { message: "CPF inválido" })
+      .refine((value) => {
+         const replaceDoc = value.replace(/\D/g, "")
+         return !!Number(replaceDoc)
+      }, "CPF deve conter apenas números"),
    password: z
       .string({ required_error: "Senha obrigatória" })
       .min(1, { message: "Senha obrigatória" }),
