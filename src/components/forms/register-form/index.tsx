@@ -14,9 +14,10 @@ import {
    FormMessage,
 } from "@/components/ui/form"
 import { Button } from "@/components/ui/button";
-import InputMask from "react-input-mask"
 import { EyeOff, Eye } from 'lucide-react';
 import { useState } from "react";
+import { cpfMask } from "@/functions/cpf-mask";
+import { phoneMask } from "@/functions/phone-mask";
 
 export function RegisterForm() {
    const [isShowPassword, setIsShowPassword] = useState(false)
@@ -24,19 +25,23 @@ export function RegisterForm() {
    const form = useForm<z.infer<typeof registerSchema>>({
       resolver: zodResolver(registerSchema),
       mode: 'onBlur',
+      defaultValues: {
+         cpf: '',
+         phone: '',
+      }
    });
 
-   function handleSubmit(data: z.infer<typeof registerSchema>) {
-      console.log(data);
+   function submit(values: z.infer<typeof registerSchema>) {
+      console.log(values);
    }
 
    function handleExternalSubmit() {
-      form.handleSubmit(handleSubmit)();
+      form.handleSubmit(submit)();
    };
 
    return (
       <Form {...form}>
-         <form className="grid gap-4 grid-cols-2 w-full" onSubmit={form.handleSubmit(handleSubmit)}>
+         <form className="grid gap-4 grid-cols-2 w-full" onSubmit={form.handleSubmit(submit)}>
             <FormField
                control={form.control}
                name="name"
@@ -68,18 +73,20 @@ export function RegisterForm() {
             <FormField
                control={form.control}
                name="cpf"
-               render={({ field }) => (
+               render={({ field: { onChange, ...props } }) => (
                   <FormItem>
                      <FormLabel>CPF</FormLabel>
                      <FormControl>
-                        <InputMask
-                           mask="999.999.999-99"
-                           value={field.value}
-                           onChange={field.onChange}
-                           onBlur={field.onBlur}
-                        >
-                           {() => <Input placeholder="000.000.000-00" {...field} />}
-                        </InputMask>
+                        <Input
+                           onChange={(e) => {
+                              const { value } = e.target
+                              e.target.value = cpfMask(value)
+
+                              onChange(e)
+                           }}
+                           placeholder="000.000.000-00"
+                           {...props}
+                        />
                      </FormControl>
                      <FormMessage />
                   </FormItem>
@@ -89,18 +96,19 @@ export function RegisterForm() {
             <FormField
                control={form.control}
                name="phone"
-               render={({ field }) => (
+               render={({ field: { onChange, ...porps } }) => (
                   <FormItem>
                      <FormLabel>Telefone</FormLabel>
                      <FormControl>
-                        <InputMask
-                           mask={'(99) 99999-9999'}
-                           value={field.value}
-                           onChange={field.onChange}
-                           onBlur={field.onBlur}
-                        >
-                           {() => <Input placeholder="(99) 99999-9999" {...field} />}
-                        </InputMask>
+                        <Input
+                           onChange={(e) => {
+                              const { value } = e.target
+                              e.target.value = phoneMask(value)
+                              onChange(e)
+                           }}
+                           placeholder="(00) 00000-0000"
+                           {...porps}
+                        />
                      </FormControl>
                      <FormMessage />
                   </FormItem>
