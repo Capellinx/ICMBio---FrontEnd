@@ -1,3 +1,4 @@
+import { PersonType } from "@/services/auth"
 import { z } from "zod"
 
 export const registerSchema = z.object({
@@ -8,7 +9,7 @@ export const registerSchema = z.object({
       .string({ required_error: "Email obrigatório" })
       .min(1, { message: "Email obrigatório" })
       .email({ message: "Email inválido" }),
-   type_person: z.enum(["Pesquisador(a)", "Condutor(a)", "Voluntario(a)"], { required_error: "Tipo obrigatório" }),
+   person_type: z.nativeEnum(PersonType),
    phone: z.coerce
       .string({ required_error: "Telefone obrigatório" })
       .min(1, { message: "Telefone obrigatório" }),
