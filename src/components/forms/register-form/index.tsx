@@ -25,10 +25,15 @@ import {
    SelectTrigger,
    SelectValue,
 } from "@/components/ui/select"
+import { AuthService } from "@/services/auth";
+import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 
 export function RegisterForm() {
    const [isShowPassword, setIsShowPassword] = useState(false)
+
+   const router = useRouter()
 
    const form = useForm<z.infer<typeof registerSchema>>({
       resolver: zodResolver(registerSchema),
@@ -39,8 +44,27 @@ export function RegisterForm() {
       }
    });
 
-   function submit(values: z.infer<typeof registerSchema>) {
-      console.log(values);
+   async function submit({ name, email, person_type, phone, cpf, password }: z.infer<typeof registerSchema>) {
+      const data = await AuthService.createCollaborator({
+         name,
+         email,
+         person_type,
+         phone,
+         cpf,
+         password
+      })
+
+
+      if (data?.error) {
+         form.setError('email', { message: 'Email ja existe' })
+         return
+      }
+
+      toast.success("Cadastrado com sucesso!", {
+         autoClose: 2500,
+      });
+
+      router.replace('/login')
    }
 
    function handleExternalSubmit() {
@@ -182,7 +206,7 @@ export function RegisterForm() {
 
             <FormField
                control={form.control}
-               name="type_person"
+               name="person_type"
                render={({ field }) => (
                   <FormItem>
                      <FormLabel>Tipo de usuário</FormLabel>
@@ -192,9 +216,10 @@ export function RegisterForm() {
                               <SelectValue placeholder="Selecione o tipo" />
                            </SelectTrigger>
                            <SelectContent>
-                              <SelectItem value="Pesquisador(a)">Pesquisador(a)</SelectItem>
-                              <SelectItem value="Condutor(a)">Condutor(a)</SelectItem>
-                              <SelectItem value="Voluntario(a)">Voluntario(a)</SelectItem>
+                              <SelectItem value="PESQUISADOR">Pesquisador(a)</SelectItem>
+                              <SelectItem value="CONDUTOR">Condutor(a)</SelectItem>
+                              <SelectItem value="VOLUNTARIO">Voluntario(a)</SelectItem>
+                              <SelectItem value="ATA">Agente temporário ambiental</SelectItem>
                            </SelectContent>
                         </Select>
                      </FormControl>
