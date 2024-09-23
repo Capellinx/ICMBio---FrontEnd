@@ -32,16 +32,11 @@ import { useRouter } from "next/navigation";
 
 export function RegisterForm() {
    const [isShowPassword, setIsShowPassword] = useState(false)
-
    const router = useRouter()
 
    const form = useForm<z.infer<typeof registerSchema>>({
       resolver: zodResolver(registerSchema),
       mode: 'onBlur',
-      defaultValues: {
-         cpf: '',
-         phone: '',
-      }
    });
 
    async function submit({ name, email, person_type, phone, cpf, password }: z.infer<typeof registerSchema>) {
@@ -54,15 +49,26 @@ export function RegisterForm() {
          password
       })
 
-
-      if (data?.error) {
-         form.setError('email', { message: 'Email ja existe' })
+      
+      if (data?.error === "Collaborator already exists") {
+         form.setError('email', { message: 'Email já cadastrado' })
          return
       }
 
-      toast.success("Cadastrado com sucesso!", {
-         autoClose: 2500,
-      });
+      if (data?.error === "CPF already exists") {
+         form.setError('cpf', { message: 'CPF já cadastrado' })
+         return
+      }
+
+      toast.success('Conta criada com sucesso!', {
+         position: 'top-center',
+         autoClose: 2000,
+         hideProgressBar: false,
+         closeOnClick: true,
+         pauseOnHover: true,
+         draggable: true,
+         progress: undefined,
+      })
 
       router.replace('/login')
    }
@@ -70,6 +76,7 @@ export function RegisterForm() {
    function handleExternalSubmit() {
       form.handleSubmit(submit)();
    };
+
 
    return (
       <Form {...form}>
@@ -115,7 +122,6 @@ export function RegisterForm() {
                               onChange={(e) => {
                                  const { value } = e.target
                                  e.target.value = cpfMask(value)
-
                                  onChange(e)
                               }}
                               placeholder="000.000.000-00"
