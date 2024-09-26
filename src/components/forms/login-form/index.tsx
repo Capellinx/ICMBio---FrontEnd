@@ -10,23 +10,23 @@ import {
    FormMessage,
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
-
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { LoginCreate, loginSchema } from "@/schemas/login";
-import Link from "next/link";
 import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
+import { useLoginForm } from "./hooks/use-login-form";
+import Link from "next/link";
+import { LoginCreate } from "@/schemas/login";
 
 export function LoginForm() {
-   const [isShowPassword, setIsShowPassword] = useState(false);
+   const [isShowPassword, setIsShowPassword] = useState(false)
 
-   const form = useForm<LoginCreate>({
-      resolver: zodResolver(loginSchema),
-   });
+   const { login, form } = useLoginForm()
 
-   function submit(values: LoginCreate) {
-      console.log(values);
+
+   function submit({ email, password }: LoginCreate) {
+      login({
+         email,
+         password
+      })
    }
 
    return (
