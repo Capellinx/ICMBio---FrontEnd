@@ -6,6 +6,7 @@ export enum PersonType {
    CONDUTOR = "CONDUTOR",
    VOLUNTARIO = "VOLUNTARIO",
    ATA = "ATA",
+   ANALISTA = "ANALISTA"
 }
 
 export type CreateCollaboratorDTO = {
@@ -14,11 +15,10 @@ export type CreateCollaboratorDTO = {
    person_type: PersonType
    phone: string
    cpf: string
-   password: string
 }
 
 export const AuthService = {
-   async createCollaborator({ name, email, person_type, phone, cpf, password }: CreateCollaboratorDTO) {
+   async createCollaborator({ name, email, person_type, phone, cpf }: CreateCollaboratorDTO) {
       try {
          const { data } = await api.post("/collaborator", {
             name,
@@ -26,7 +26,6 @@ export const AuthService = {
             person_type,
             phone,
             cpf,
-            password,
          })
 
          return data

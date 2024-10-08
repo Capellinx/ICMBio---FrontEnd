@@ -5,6 +5,7 @@ import { api } from "@/services/api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 
@@ -15,6 +16,7 @@ interface IHandleLoginProps {
 
 export function useLoginForm() {
    const { setUser } = useUser()
+   const router = useRouter()
 
    const form = useForm<LoginCreate>({
       resolver: zodResolver(loginSchema),
@@ -36,6 +38,7 @@ export function useLoginForm() {
             updateId: "login",
          });
          setUser(data)
+         router.replace("/dashboard")
       },
       onError: (error: AxiosError) => {
          if (error.response?.data) {

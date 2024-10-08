@@ -3,7 +3,7 @@
 import { Input } from "@/components/ui/input";
 import { registerSchema } from "@/schemas/register";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { Control, useForm } from "react-hook-form";
 import { z } from "zod";
 import {
    Form,
@@ -14,9 +14,6 @@ import {
    FormMessage,
 } from "@/components/ui/form"
 import { Button } from "@/components/ui/button";
-import { EyeOff, Eye } from 'lucide-react';
-import { useState } from "react";
-import { cpfMask } from "@/functions/cpf-mask";
 import { phoneMask } from "@/functions/phone-mask";
 import {
    Select,
@@ -25,58 +22,36 @@ import {
    SelectTrigger,
    SelectValue,
 } from "@/components/ui/select"
-import { AuthService } from "@/services/auth";
-import { toast } from "react-toastify";
-import { useRouter } from "next/navigation";
+import { FormCondutor, FormValues } from "./fragments/form-condutor";
+import { FormPesquisador, FormValuesPesquisador } from "./fragments/form-pesquisador";
+import { useRegisterCollaborator } from "./hooks/use-register-collaborator";
+import { FormAnalista, FormAta } from "./fragments";
 
 
 export function RegisterForm() {
-   const [isShowPassword, setIsShowPassword] = useState(false)
-   const router = useRouter()
-
+   const { handleRegisterCollaborator } = useRegisterCollaborator()
+   
    const form = useForm<z.infer<typeof registerSchema>>({
       resolver: zodResolver(registerSchema),
       mode: 'onBlur',
    });
 
-   async function submit({ name, email, person_type, phone, cpf, password }: z.infer<typeof registerSchema>) {
-      const data = await AuthService.createCollaborator({
+   const personType = form.watch('person_type')
+
+   async function submit({ name, email, person_type, phone, cpf, matricula }: z.infer<typeof registerSchema>) {
+      handleRegisterCollaborator({
          name,
          email,
          person_type,
          phone,
          cpf,
-         password
-      })
-
-      
-      if (data?.error === "Collaborator already exists") {
-         form.setError('email', { message: 'Email já cadastrado' })
-         return
-      }
-
-      if (data?.error === "CPF already exists") {
-         form.setError('cpf', { message: 'CPF já cadastrado' })
-         return
-      }
-
-      toast.success('Conta criada com sucesso!', {
-         position: 'top-center',
-         autoClose: 2000,
-         hideProgressBar: false,
-         closeOnClick: true,
-         pauseOnHover: true,
-         draggable: true,
-         progress: undefined,
-      })
-
-      router.replace('/login')
+         matricula
+      });
    }
 
    function handleExternalSubmit() {
       form.handleSubmit(submit)();
    };
-
 
    return (
       <Form {...form}>
@@ -111,27 +86,6 @@ export function RegisterForm() {
                   )}
                />
 
-               <FormField
-                  control={form.control}
-                  name="cpf"
-                  render={({ field: { onChange, ...props } }) => (
-                     <FormItem>
-                        <FormLabel>CPF</FormLabel>
-                        <FormControl>
-                           <Input
-                              onChange={(e) => {
-                                 const { value } = e.target
-                                 e.target.value = cpfMask(value)
-                                 onChange(e)
-                              }}
-                              placeholder="000.000.000-00"
-                              {...props}
-                           />
-                        </FormControl>
-                        <FormMessage />
-                     </FormItem>
-                  )}
-               />
 
                <FormField
                   control={form.control}
@@ -157,52 +111,22 @@ export function RegisterForm() {
 
                <FormField
                   control={form.control}
-                  name="password"
+                  name="person_type"
                   render={({ field }) => (
                      <FormItem>
-                        <FormLabel>Senha</FormLabel>
+                        <FormLabel>Tipo de usuário</FormLabel>
                         <FormControl>
-                           <div className="relative">
-                              <Input type={isShowPassword ? 'text' : 'password'} {...field} className="pr-10" />
-                              {isShowPassword
-                                 ? <Eye
-                                    className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer size-4 "
-                                    onClick={() => setIsShowPassword(!isShowPassword)}
-                                 />
-                                 : <EyeOff
-
-                                    className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer size-4 "
-                                    onClick={() => setIsShowPassword(!isShowPassword)}
-                                 />
-                              }
-                           </div>
-                        </FormControl>
-                        <FormMessage />
-                     </FormItem>
-                  )}
-               />
-
-               <FormField
-                  control={form.control}
-                  name="confirmPassword"
-                  render={({ field }) => (
-                     <FormItem>
-                        <FormLabel>Confirmar Senha</FormLabel>
-                        <FormControl>
-                           <div className="relative">
-                              <Input type={isShowPassword ? 'text' : 'password'} {...field} className="pr-10" />
-                              {isShowPassword
-                                 ? <Eye
-                                    className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer size-4 "
-                                    onClick={() => setIsShowPassword(!isShowPassword)}
-                                 />
-                                 : <EyeOff
-
-                                    className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer size-4 "
-                                    onClick={() => setIsShowPassword(!isShowPassword)}
-                                 />
-                              }
-                           </div>
+                           <Select value={field.value} onValueChange={field.onChange}>
+                              <SelectTrigger className="">
+                                 <SelectValue placeholder="Selecione o tipo" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                 <SelectItem value="ANALISTA">Analista</SelectItem>
+                                 <SelectItem value="ATA">Agente temporário ambiental (ATA)</SelectItem>
+                                 <SelectItem value="CONDUTOR">Condutor(a)</SelectItem>
+                                 <SelectItem value="PESQUISADOR">Pesquisador(a)</SelectItem>
+                              </SelectContent>
+                           </Select>
                         </FormControl>
                         <FormMessage />
                      </FormItem>
@@ -210,32 +134,34 @@ export function RegisterForm() {
                />
             </section>
 
-            <FormField
-               control={form.control}
-               name="person_type"
-               render={({ field }) => (
-                  <FormItem>
-                     <FormLabel>Tipo de usuário</FormLabel>
-                     <FormControl>
-                        <Select onValueChange={field.onChange} value={field.value}>
-                           <SelectTrigger className="">
-                              <SelectValue placeholder="Selecione o tipo" />
-                           </SelectTrigger>
-                           <SelectContent>
-                              <SelectItem value="PESQUISADOR">Pesquisador(a)</SelectItem>
-                              <SelectItem value="CONDUTOR">Condutor(a)</SelectItem>
-                              <SelectItem value="VOLUNTARIO">Voluntario(a)</SelectItem>
-                              <SelectItem value="ATA">Agente temporário ambiental</SelectItem>
-                           </SelectContent>
-                        </Select>
-                     </FormControl>
-                     <FormMessage />
-                  </FormItem>
-               )}
-            />
+            {personType === "CONDUTOR" && (
+               <FormCondutor
+                  control={form.control as Control<FormValues>}
+               />
+            )}
+
+            {personType === "PESQUISADOR" && (
+               <FormPesquisador
+                  control={form.control as Control<FormValuesPesquisador>}
+               />
+            )}
+
+            {personType === "ANALISTA" && (
+               <FormAnalista
+                  control={form.control as Control<FormValues>}
+               />
+            )}
+
+            {personType === "ATA" && (
+               <FormAta
+                  control={form.control as Control<FormValues>}
+               />
+            )}
+
+
          </form>
          <Button
-            type="submit"
+            type="button"
             className="w-full bg-[#1E9E6A] p-4 hover:bg-[#207553] mt-4"
             onClick={() => handleExternalSubmit()}
          >

@@ -16,11 +16,11 @@ import { useLoginForm } from "./hooks/use-login-form";
 import Link from "next/link";
 import { LoginCreate } from "@/schemas/login";
 
+
 export function LoginForm() {
    const [isShowPassword, setIsShowPassword] = useState(false)
 
    const { login, form } = useLoginForm()
-
 
    function submit({ email, password }: LoginCreate) {
       login({
@@ -28,6 +28,21 @@ export function LoginForm() {
          password
       })
    }
+
+   // async function submit({ email, password }: LoginCreate) {
+   //    const result = await signIn("credentials", {
+   //       email,
+   //       password,
+   //       redirect: false
+   //    })
+
+   //    if(result?.error){
+   //       console.log(result?.error)
+   //       return   
+   //    }
+
+   //    router.replace("/dashboard")
+   // }
 
    return (
       <Form {...form}>
