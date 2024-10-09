@@ -17,7 +17,7 @@ export default function Register() {
                height={500}
             />
          </section>
-         <section className="flex items-center justify-center py-12">
+         <section className="flex items-center justify-center py-12 px-4">
             <div className="mx-auto grid w-[650px] gap-6">
                <div className="grid gap-2 text-center">
                   <p className="text-balance text-muted-foreground text-left">
