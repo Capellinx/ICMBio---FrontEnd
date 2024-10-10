@@ -2,8 +2,7 @@
 
 import { Input } from "@/components/ui/input";
 import { registerSchema } from "@/schemas/register";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Control, useForm } from "react-hook-form";
+import { Control } from "react-hook-form";
 import { z } from "zod";
 import {
    Form,
@@ -12,7 +11,7 @@ import {
    FormItem,
    FormLabel,
    FormMessage,
-} from "@/components/ui/form"
+} from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { phoneMask } from "@/functions/phone-mask";
 import {
@@ -21,7 +20,7 @@ import {
    SelectItem,
    SelectTrigger,
    SelectValue,
-} from "@/components/ui/select"
+} from "@/components/ui/select";
 import { FormCondutor, FormValues } from "./fragments/form-condutor";
 import { FormPesquisador, FormValuesPesquisador } from "./fragments/form-pesquisador";
 import { useRegisterCollaborator } from "./hooks/use-register-collaborator";
@@ -29,12 +28,7 @@ import { FormAnalista, FormAta } from "./fragments";
 
 
 export function RegisterForm() {
-   const { handleRegisterCollaborator } = useRegisterCollaborator()
-   
-   const form = useForm<z.infer<typeof registerSchema>>({
-      resolver: zodResolver(registerSchema),
-      mode: 'onBlur',
-   });
+   const { handleRegisterCollaborator, form } = useRegisterCollaborator()
 
    const personType = form.watch('person_type')
 
@@ -56,7 +50,7 @@ export function RegisterForm() {
    return (
       <Form {...form}>
          <form onSubmit={form.handleSubmit(submit)}>
-            <section className="grid gap-4 grid-cols-1 md:grid-cols-2 w-full mb-4">
+            <section className="flex flex-col gap-4">
 
                <FormField
                   control={form.control}
