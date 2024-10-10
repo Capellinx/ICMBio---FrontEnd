@@ -20,7 +20,7 @@ interface FormCondutorProps {
 
 export function FormAnalista({ control }: FormCondutorProps) {
    return (
-      <div>
+      <div className="flex flex-col gap-4 mt-4">
          <FormField
             control={control}
             name="matricula"

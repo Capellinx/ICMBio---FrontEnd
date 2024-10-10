@@ -20,28 +20,30 @@ interface FormCondutorProps {
 
 export function FormCondutor({ control }: FormCondutorProps) {
    return (
-      <FormField
-         control={control}
-         name="cpf"
-         render={({ field: { onChange, value, ...props } }) => (
-            <FormItem>
-               <FormLabel>CPF do condutor</FormLabel>
-               <FormControl>
-                  <Input
-                     value={value || ""}
-                     onChange={(e) => {
-                        const { value } = e.target
-                        e.target.value = cpfMask(value)
-                        onChange(e)
-                     }}
-                     placeholder="000.000.000-00"
-                     {...props}
-
-                  />
-               </FormControl>
-               <FormMessage />
-            </FormItem>
-         )}
-      />
+      <div className="mt-4">
+         <FormField
+            control={control}
+            name="cpf"
+            render={({ field: { onChange, value, ...props } }) => (
+               <FormItem>
+                  <FormLabel>CPF do condutor</FormLabel>
+                  <FormControl>
+                     <Input
+                        value={value || ""}
+                        onChange={(e) => {
+                           const { value } = e.target
+                           e.target.value = cpfMask(value)
+                           onChange(e)
+                        }}
+                        placeholder="000.000.000-00"
+                        {...props}
+   
+                     />
+                  </FormControl>
+                  <FormMessage />
+               </FormItem>
+            )}
+         />
+      </div>
    )
 }
