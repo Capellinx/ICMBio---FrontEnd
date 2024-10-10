@@ -71,7 +71,11 @@ export function LoginForm() {
                         <FormLabel>Senha</FormLabel>
                         <FormControl>
                            <div className="relative">
-                              <Input type={isShowPassword ? 'text' : 'password'} {...field} className="pr-10" />
+                              <Input
+                                 type={isShowPassword ? 'text' : 'password'} {...field}
+                                 className="pr-10" 
+                                 placeholder="********"
+                              />
                               {isShowPassword ? (
                                  <Eye
                                     className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer size-4"
@@ -90,18 +94,15 @@ export function LoginForm() {
                   )}
                />
                <div className="flex items-center">
-                  <Link href="/forgot-password" className="ml-auto inline-block text-sm underline">
+                  <Link href="/forgot-password" className="ml-auto inline-block text-sm  my-2">
                      Esqueceu sua senha?
                   </Link>
                </div>
             </div>
-            <Button type="submit" className="w-full bg-[#1E9E6A] p-4 hover:bg-[#207553] mt-4">
+            <Button type="submit" className="w-full bg-[#1E9E6A] p-4 hover:bg-[#207553]">
                Entrar
             </Button>
          </form>
-         <Button variant="outline" className="w-full">
-            Login institucional
-         </Button>
       </Form>
    );
 }
